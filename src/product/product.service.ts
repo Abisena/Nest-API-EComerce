@@ -8,11 +8,23 @@ export class ProductService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createProductDto: CreateProductDto) {
-    const product = await this.prisma.product.create({
-      data: createProductDto,
-    });
+    try {
+      const product = await this.prisma.product.create({
+        data: createProductDto,
+      });
 
-    return product;
+      return {
+        message: 'Product created successfully',
+        status: 201,
+        data: product,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Something went wrong',
+        status: 400,
+      };
+    }
   }
 
   async findAll() {

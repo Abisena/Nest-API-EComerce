@@ -37,6 +37,9 @@ model Order {
   id        Int      @id @default(autoincrement())
   productId Int
   quantity  Int
+  total     Float
+  userId    String 
+  status    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
