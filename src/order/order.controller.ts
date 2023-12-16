@@ -29,22 +29,22 @@ export class OrderController {
     return createdOrder;
   }
 
-  @Get()
+  @Get('/all-orderan')
   findAll() {
     return this.orderService.findAll();
   }
 
-  @Get(':id')
+  @Get('/order/:id')
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('/update-order/:id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     return this.orderService.update(+id, updateOrderDto);
   }
 
-  @Delete(':id')
+  @Delete('/del-order/:id')
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
   }

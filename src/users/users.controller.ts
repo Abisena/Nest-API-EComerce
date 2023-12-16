@@ -45,7 +45,7 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
-  @Post('login')
+  @Post('/login')
   async login(@Body() loginDto: CreateUserDto) {
     try {
       const { username, password } = loginDto;

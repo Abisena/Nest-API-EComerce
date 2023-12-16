@@ -27,9 +27,9 @@ export class OrderService {
 
     const total = product.price * quantity;
 
-    // Transaksi database menggunakan Prisma untuk memastikan keselamatan transaksi
+    // Transaksi database For keselamatan transaksi
     const createdOrder = await this.prisma.$transaction(async (prisma) => {
-      // Buat order
+      // Buat ngorder
       const order = await prisma.order.create({
         data: {
           productId,
@@ -40,7 +40,7 @@ export class OrderService {
         },
       });
 
-      // Kurangi jumlah produk di database setelah order berhasil dibuat
+      // Ngurangin data didatabase nya kalau udah Order
       await prisma.product.update({
         where: { id: productId },
         data: {
@@ -56,19 +56,92 @@ export class OrderService {
     return createdOrder;
   }
 
-  findAll() {
-    return `This action returns all order`;
+  // buat all orderan
+  async findAll() {
+    try {
+      const orders = await this.prisma.order.findMany();
+      return {
+        message: 'Successfully Get Data!',
+        status: HttpStatus.OK,
+        data: { orders },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Get Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  // buat one order
+  async findOne(id: number) {
+    try {
+      const getOneOrder = await this.prisma.order.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      return {
+        message: 'Successfully Get One Data!',
+        status: HttpStatus.OK,
+        data: { getOneOrder },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Get One Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  // update orderans
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    try {
+      const updateOrders = await this.prisma.order.update({
+        where: {
+          id,
+        },
+        data: {
+          ...updateOrderDto,
+        },
+      });
+
+      return {
+        message: 'Successfully Update Data!',
+        status: HttpStatus.OK,
+        data: { updateOrders },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Update Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  // delete orderan
+  async remove(id: number) {
+    try {
+      const removeOrders = await this.prisma.order.delete({
+        where: {
+          id,
+        },
+      });
+      return {
+        message: 'Successfully Delete Data!',
+        status: HttpStatus.OK,
+        data: { removeOrders },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Delete Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
   }
 }
