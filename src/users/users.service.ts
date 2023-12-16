@@ -107,7 +107,25 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    try {
+      const delUsers = await this.dbService.users.delete({
+        where: {
+          id,
+        },
+      });
+
+      return {
+        message: 'Successfully Delete Data!',
+        status: HttpStatus.OK,
+        data: { delUsers },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Delete Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
   }
 }
