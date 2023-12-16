@@ -13,6 +13,9 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
+  @IsString()
+  role: string;
+
   hashedPassword?: string;
   refreshToken?: string;
 }

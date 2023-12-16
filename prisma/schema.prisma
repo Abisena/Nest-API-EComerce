@@ -16,8 +16,9 @@ model Users {
   email        String   @unique
   password     String
   refreshToken String?  @unique
+  role         String   @default("User")
   created_at   DateTime @default(now())
-  updated_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
 
 model Product {

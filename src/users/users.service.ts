@@ -10,7 +10,38 @@ import { HttpStatus } from '@nestjs/common';
 export class UsersService {
   constructor(private readonly dbService: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async createAdmin(createUserDto: CreateUserDto) {
+    try {
+      const hashedPassword = await argon2.hash(createUserDto.password);
+
+      const user = await this.dbService.users.create({
+        data: {
+          username: createUserDto.username,
+          email: createUserDto.email,
+          password: hashedPassword,
+          role: 'Admin',
+        },
+      });
+
+      const token = jwt.sign({ userId: user.id }, 'secretKey', {
+        expiresIn: '1h',
+      });
+
+      return {
+        message: 'Successfully Create Data!',
+        status: HttpStatus.OK,
+        data: { user, token },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: 'Failed To Create Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async createUser(createUserDto: CreateUserDto) {
     try {
       const hashedPassword = await argon2.hash(createUserDto.password);
 
@@ -76,24 +107,32 @@ export class UsersService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(userId: string, updateUserDto: UpdateUserDto) {
     try {
-      const updateUser = await this.dbService.users.update({
-        where: { id },
+      const { username, email, password, role, refreshToken } = updateUserDto;
+
+      const hashedPassword = password ? await argon2.hash(password) : undefined;
+
+      const updatedUser = await this.dbService.users.update({
+        where: { id: userId },
         data: {
-          ...updateUserDto,
+          username,
+          email,
+          password: hashedPassword,
+          role: role,
+          refreshToken,
         },
       });
 
       return {
-        message: 'Successfully Update Data!',
+        message: 'Successfully updated user!',
         status: HttpStatus.OK,
-        data: { updateUser },
+        data: updatedUser,
       };
     } catch (error) {
       console.log(error);
       return {
-        message: 'Failed To Update Data!',
+        message: 'Failed to update user!',
         status: HttpStatus.BAD_REQUEST,
       };
     }

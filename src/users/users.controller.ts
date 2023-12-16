@@ -16,11 +16,15 @@ import { HttpStatus } from '@nestjs/common';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('/register')
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @Post('/admin')
+  isAdminAcount(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createAdmin(createUserDto);
   }
 
+  @Post('/register')
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createUser(createUserDto);
+  }
   @Get('/all')
   findAll() {
     return this.usersService.findAll();
