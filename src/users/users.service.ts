@@ -5,6 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpStatus } from '@nestjs/common';
+
 @Injectable()
 export class UsersService {
   constructor(private readonly dbService: PrismaService) {}
@@ -25,19 +26,10 @@ export class UsersService {
         expiresIn: '1h',
       });
 
-      const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', {
-        expiresIn: '7d',
-      });
-
-      await this.dbService.users.update({
-        where: { id: user.id },
-        data: { refreshToken },
-      });
-
       return {
         message: 'Successfully Create Data!',
         status: HttpStatus.OK,
-        data: { user, token, refreshToken },
+        data: { user, token },
       };
     } catch (error) {
       console.log(error.message);
@@ -50,11 +42,11 @@ export class UsersService {
 
   async findAll() {
     try {
-      const user = await this.dbService.users.findMany();
+      const users = await this.dbService.users.findMany();
       return {
         message: 'Successfully Get Data!',
         status: HttpStatus.OK,
-        data: { user },
+        data: { users },
       };
     } catch (error) {
       console.log(error);
@@ -62,9 +54,9 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
-      const oneUser = await this.dbService.users.findFirst({
+      const oneUser = await this.dbService.users.findUnique({
         where: {
           id,
         },
@@ -84,7 +76,7 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       const updateUser = await this.dbService.users.update({
         where: { id },
@@ -107,7 +99,7 @@ export class UsersService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const delUsers = await this.dbService.users.delete({
         where: {
@@ -124,6 +116,47 @@ export class UsersService {
       console.log(error);
       return {
         message: 'Failed To Delete Data!',
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+  }
+
+  async login(username: string, password: string) {
+    try {
+      const user = await this.dbService.users.findFirst({
+        where: {
+          username,
+        },
+      });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const isPasswordValid = await argon2.verify(user.password, password);
+
+      if (!isPasswordValid) {
+        throw new Error('Invalid password');
+      }
+
+      const refreshToken = jwt.sign({ userId: user.id }, 'refreshSecretKey', {
+        expiresIn: '7d',
+      });
+
+      await this.dbService.users.update({
+        where: { id: user.id },
+        data: { refreshToken },
+      });
+
+      return {
+        message: 'Successfully logged in!',
+        status: HttpStatus.OK,
+        data: { user, refreshToken },
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        message: 'Failed to log in',
         status: HttpStatus.BAD_REQUEST,
       };
     }

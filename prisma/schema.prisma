@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Users {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   username     String
   email        String   @unique
   password     String
@@ -21,21 +21,23 @@ model Users {
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  name      String
-  price     Float
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  quantity    Int
+  description String?
+  img         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
 }
 
 model Order {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   productId Int
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  product   Product   @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
