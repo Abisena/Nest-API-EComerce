@@ -160,11 +160,11 @@ export class UsersService {
     }
   }
 
-  async login(username: string, password: string) {
+  async login(email: string, password: string) {
     try {
       const user = await this.dbService.users.findFirst({
         where: {
-          username,
+          email,
         },
       });
 

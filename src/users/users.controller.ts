@@ -48,8 +48,8 @@ export class UsersController {
   @Post('/login')
   async login(@Body() loginDto: CreateUserDto) {
     try {
-      const { username, password } = loginDto;
-      const result = await this.usersService.login(username, password);
+      const { email, password } = loginDto;
+      const result = await this.usersService.login(email, password);
       return result;
     } catch (error) {
       console.log(error.message);

@@ -11,97 +11,96 @@ datasource db {
 }
 
 model Order {
-  id           Int       @id @default(autoincrement())
-  productId    Int
-  quantity     Int
-  total        Float
-  userId       String 
-  status       String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  product      Product   @relation(fields: [productId], references: [id])
+  id        Int      @id @default(autoincrement())
+  productId Int
+  quantity  Int
+  total     Float
+  userId    String
+  status    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Review {
-  id           Int       @id @default(autoincrement())
-  content      String
-  rating       Float
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  productId    Int
-  product      Product   @relation(fields: [productId], references: [id])
+  id        Int      @id @default(autoincrement())
+  content   String
+  rating    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Stock {
-  id           Int       @id @default(autoincrement())
-  quantity     Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  productId    Int
-  product      Product   @relation(fields: [productId], references: [id])
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Rating {
-  id           Int       @id @default(autoincrement())
-  rating       Float
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  userId       String
-  user        Users    @relation(fields: [userId], references: [id])
-  productId    Int
-  product      Product   @relation(fields: [productId], references: [id])
+  id        Int      @id @default(autoincrement())
+  rating    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Notification {
-  id           Int       @id @default(autoincrement())
-  message      String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  userId       String
-  user        Users     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id])
 }
 
 model Product {
-  id           Int       @id @default(autoincrement())
-  name         String
-  price        Float
-  quantity     Int
-  description  String?
-  img          String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  orders       Order[]
-  reviews      Review[]
-  stocks       Stock[]
-  ratings      Rating[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  quantity    Int
+  description String?
+  img         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+  reviews     Review[]
+  stocks      Stock[]
+  ratings     Rating[]
 }
 
 model Users {
-  id           String    @id @default(uuid())
-  username     String
-  email        String    @unique
-  password     String
-  refreshToken String?   @unique
-  role         String    @default("User")
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
-  ratings      Rating[]
+  id            String         @id @default(uuid())
+  username      String
+  email         String         @unique
+  password      String
+  refreshToken  String?        @unique
+  role          String         @default("User")
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  ratings       Rating[]
   notifications Notification[]
 }
 
-
 model Tax {
-  id           Int       @id @default(autoincrement())
-  name         String
-  rate         Float
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  rate      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Shipping {
-  id           Int       @id @default(autoincrement())
-  name         String
-  cost         Float
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  cost      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

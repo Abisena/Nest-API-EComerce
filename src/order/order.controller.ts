@@ -12,21 +12,22 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('order')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post('/product')
-  async createOrder(@Body() createOrderDto: CreateOrderDto, @Req() req) {
-    const userId = req.user.id;
-    const createdOrder = await this.orderService.createOrder({
-      ...createOrderDto,
-      userId,
-    });
-    return createdOrder;
+  async createOrder(@Body() createOrderDto: CreateOrderDto) {
+    // const userId = req.user.id;
+    // const createdOrder = await this.orderService.createOrder({
+    //   ...createOrderDto,
+    //   userId,
+    // });
+    // return createdOrder;
+    return this.orderService.createOrder(createOrderDto);
   }
 
   @Get('/all-orderan')
