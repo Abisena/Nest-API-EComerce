@@ -12,9 +12,15 @@ import { ProductController } from './product/product.controller';
 import { OrderController } from './order/order.controller';
 import { OrderService } from './order/order.service';
 import { PrismaService } from './prisma/prisma.service';
+import { ReviewModule } from './review/review.module';
+import { StockModule } from './stock/stock.module';
+import { RatingModule } from './rating/rating.module';
+import { NotificationModule } from './notification/notification.module';
+import { TaxModule } from './tax/tax.module';
+import { ShippingModule } from './shipping/shipping.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, OrderModule, ProductModule],
+  imports: [PrismaModule, UsersModule, OrderModule, ProductModule, ReviewModule, StockModule, RatingModule, NotificationModule, TaxModule, ShippingModule],
   controllers: [
     AppController,
     UsersController,
