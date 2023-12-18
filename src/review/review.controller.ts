@@ -20,22 +20,22 @@ export class ReviewController {
     return this.reviewService.create(createReviewDto);
   }
 
-  @Get()
+  @Get('/all-reviews')
   findAll() {
     return this.reviewService.findAll();
   }
 
-  @Get(':id')
+  @Get('/review/:id')
   findOne(@Param('id') id: string) {
     return this.reviewService.getRiviewOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('/review/:id')
   update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
     return this.reviewService.update(+id, updateReviewDto);
   }
 
-  @Delete(':id')
+  @Delete('/review/:id')
   remove(@Param('id') id: string) {
     return this.reviewService.remove(+id);
   }
