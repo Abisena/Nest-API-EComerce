@@ -27,33 +27,35 @@ export class OrderService {
 
     const total = product.price * quantity;
 
-    // Transaksi database For keselamatan transaksi
-    const createdOrder = await this.prisma.$transaction(async (prisma) => {
-      // Buat ngorder
-      const order = await prisma.order.create({
-        data: {
-          productId,
-          quantity,
-          total,
-          userId,
-          status: 'pending',
-        },
-      });
-
-      // Ngurangin data didatabase nya kalau udah Order
-      await prisma.product.update({
-        where: { id: productId },
-        data: {
-          quantity: {
-            decrement: quantity,
+    try {
+      const createdOrder = await this.prisma.$transaction(async (prisma) => {
+        const order = await prisma.order.create({
+          data: {
+            productId,
+            quantity,
+            total,
+            userId,
+            status: 'pending',
           },
-        },
+        });
+
+        await prisma.product.update({
+          where: { id: productId },
+          data: {
+            quantity: {
+              decrement: quantity,
+            },
+          },
+        });
+
+        return order;
       });
 
-      return order;
-    });
-
-    return createdOrder;
+      return createdOrder;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Failed to create order');
+    }
   }
 
   // buat all orderan
